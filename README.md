@@ -2,7 +2,7 @@
 
 - 曲阜师范大学某平台作业截止提醒（未开发）
 - 曲阜师范大学某平台作业查看成绩（已开发）
-- 曲阜师范大学某平台作业客观题百分百正确自动化作答（已有思路，已实现半自动，未开发）
+- 曲阜师范大学某平台作业客观题爆破答案（已开发，见 [ZXinAutoAnswer](https://github.com/W1ndys/ZXinAutoAnswer)）
 
 ## 使用方法
 
@@ -13,6 +13,10 @@
 3. 结果会保存到 `socre_info/course_summary.txt` 文件中
 
 ## 更新日志
+
+### 2024.11.18
+
+- feat: 开发了爆破答案功能（见 [ZXinAutoAnswer](https://github.com/W1ndys/ZXinAutoAnswer)），暂不开源
 
 ### 2024.11.14
 
