@@ -16,7 +16,7 @@
 
 ### 2024.11.18
 
-- feat: 开发了爆破答案功能（见 [ZXinAutoAnswer](https://github.com/W1ndys/ZXinAutoAnswer)），暂不开源
+- feat: 开发了客观题爆破答案功能（见 [ZXinAutoAnswer](https://github.com/W1ndys/ZXinAutoAnswer)），暂不开源
 
 ### 2024.11.14
 
