@@ -24,10 +24,12 @@ def get_token(username, password):
             print("[+]登录成功")
             token = response["data"]["token"]
             print("[+]获取token成功")
+            print("--------------------------------")
             return token
         else:
             print("[-]登录失败")
             print(f"错误信息: {msg}")
+            print("--------------------------------")
             return None
     except requests.exceptions.RequestException as e:
         print(f"[-]请求失败: {e}，请检查网络连接")

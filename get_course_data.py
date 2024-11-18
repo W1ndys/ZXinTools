@@ -1,8 +1,10 @@
 import requests
 import json
-from get_token import get_token  # 导入get_token函数
+import os
+from get_token import get_token
 
 
+# 获取已加入的课程数据
 def fetch_course_data(token):
     try:
         api_url = "https://v2.api.z-xin.net/stu/course/getJoinedCourse2"
@@ -18,13 +20,19 @@ def fetch_course_data(token):
         return None
 
 
+def save_course_data_to_json(course_data):
+    # 检查并创建目录
+    os.makedirs("output", exist_ok=True)
+    PATH = os.path.join("output", "course_data.json")
+    # 把数据直接保存到文件
+    with open(PATH, "w", encoding="utf-8") as file:
+        json.dump(course_data, file, ensure_ascii=False, indent=4)
+    print(f"[+]保存数据成功，数据已保存到 {PATH} 文件中")
+
+
 def process_course_data(course_data):
     if course_data:
-        # 把数据直接保存到文件
-        with open("course_data.json", "w", encoding="utf-8") as file:
-            json.dump(course_data, file, ensure_ascii=False, indent=4)
-        print("[+]读取数据成功，数据已保存到 course_data.json 文件中")
-
+        save_course_data_to_json(course_data)
         if course_data["msg"] == "成功":
             print("[+]数据获取成功")
             print("[+]即将开始解析数据")
@@ -46,16 +54,77 @@ def process_course_data(course_data):
                     else:
                         data += "暂未作答，无相关数据\n"
                     data += "----------------------------------------------------------------\n"
-
-            with open("course_data.txt", "w", encoding="utf-8") as file:
+            # 检查并创建目录
+            os.makedirs("output", exist_ok=True)
+            PATH = os.path.join("output", "course_data.txt")
+            with open(PATH, "w", encoding="utf-8") as file:
                 file.write(data)
-            print("[+]课程数据解析完成，结果已保存到 course_data.txt 文件中")
+            print(f"[+]课程数据解析完成，结果已保存到 {PATH} 文件中")
             print("[+]课程数据程序运行结束")
-            print("--------------------------------")
-            print("Power by W1ndys")
-            print("https://github.com/W1ndys")
         else:
             print("[-]课程数据获取失败")
+    print("--------------------------------")
+
+
+# 读取用户信息
+def read_user_info(token):
+    url = "https://v2.api.z-xin.net/auth/user"
+    response = requests.get(url, headers={"Authorization": f"Bearer {token}"})
+    response = response.json()
+    if response.get("code") == 2000:
+        print("[+]用户信息获取成功")
+        data = response.get("data", {})
+
+        # 提取用户基本信息
+        username = data.get("username", "获取失败")
+        nickname = data.get("nickname", "获取失败")
+        email = data.get("email", "获取失败")
+        sex = data.get("sex", "获取失败")
+        userType = data.get("userType", "获取失败")
+
+        # 提取学院信息
+        college_info = data.get("college", {})
+        college_name = college_info.get("name", "获取失败")
+
+        # 提取位置信息
+        location_info = data.get("location", {})
+        address = location_info.get("addr", "获取失败")
+        city = location_info.get("city", "获取失败")
+        district = location_info.get("district", "获取失败")
+        location_type = location_info.get("location", {}).get("type", "获取失败")
+        location_coordinates = location_info.get("location", {}).get(
+            "coordinates", "获取失败"
+        )
+
+        # 提取宿舍信息
+        dormitory_info = data.get("dormitory", {})
+        dormitory_bname = dormitory_info.get("bname", "获取失败")
+
+        # 提取学生信息
+        student_info = data.get("student", [{}])[0]
+        student_joinedClassrooms = student_info.get("joinedClassrooms", "获取失败")
+        student_joinedClassrooms_name = student_joinedClassrooms[0].get(
+            "name", "获取失败"
+        )
+        grade = student_info.get("grade", "获取失败")
+        # 打印提取的信息
+        print(f"[+]用户名: {username}")
+        print(f"[+]昵称: {nickname}")
+        print(f"[+]邮箱: {email}")
+        print(f"[+]性别: {sex}")
+        print(f"[+]用户类型: {userType}")
+        print(f"[+]学院名称: {college_name}")
+        print(f"[+]地址: {address}")
+        print(f"[+]城市: {city}")
+        print(f"[+]区: {district}")
+        print(f"[+]位置类型: {location_type}")
+        print(f"[+]位置坐标: {location_coordinates}")
+        print(f"[+]宿舍名称: {dormitory_bname}")
+        print(f"[+]班级名称: {student_joinedClassrooms_name}")
+        print(f"[+]年级: {grade}")
+    else:
+        print("[-] 获取用户信息失败")
+    print("--------------------------------")
 
 
 def read_config():
@@ -64,17 +133,21 @@ def read_config():
         config = json.load(config_file)
         username = config["username"]
         password = config["password"]
-        print("--------------------------------")
         print("[+]读取账号密码成功")
         print("[+]账号：" + username)
         print("[+]密码：" + password)
+        print("--------------------------------")
         return username, password
 
 
 if __name__ == "__main__":
+
+    print("https://github.com/W1ndys")
+    print("--------------------------------")
     username, password = read_config()
     token = get_token(username, password)
     if token:
+        read_user_info(token)
         course_data = fetch_course_data(token)
         process_course_data(course_data)
     else:

@@ -43,15 +43,12 @@ def process_course_scores(course_data):  # 修改函数名
                     data += "----------------------------------------------------------------\n"
 
             # 检查并创建目录
-            os.makedirs("score_info", exist_ok=True)  # 修改目录名
+            os.makedirs("output", exist_ok=True)
             # 修改生成文件名，保存在子目录下
-            with open(
-                "score_info/course_score.txt", "w", encoding="utf-8"
-            ) as file:  # 修改文件名
+            PATH = os.path.join("output", "score_info.txt")
+            with open(PATH, "w", encoding="utf-8") as file:  # 修改文件名
                 file.write(data)
-            print(
-                "[+]成绩数据解析完成，结果已保存到 score_info/course_score.txt 文件中"  # 修改文件路径
-            )
+            print(f"[+]成绩数据解析完成，结果已保存到 {PATH} 文件中")
             print("[+]成绩数据程序运行结束")
             print("--------------------------------")
             print("Power by W1ndys")
