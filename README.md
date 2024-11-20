@@ -4,6 +4,10 @@
 - 曲阜师范大学某平台作业查看成绩（已开发）
 - 曲阜师范大学某平台作业客观题爆破答案（已开发，见 [ZXinAutoAnswer](https://github.com/W1ndys/ZXinAutoAnswer)）
 
+## 联系
+
+有疑问请联系QQ，点击链接加我为QQ好友：https://qm.qq.com/q/unUcwC0eyG
+
 ## 使用方法
 
 ### 查看成绩
