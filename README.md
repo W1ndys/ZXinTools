@@ -42,3 +42,7 @@
 本项目采用 [MIT 开源协议](LICENSE)，请遵守开源协议
 
 本项目的 token 获取函数来自 [AuroBreeze](https://github.com/AuroBreeze) 的 [Z-xinAnswerAutomatic](https://github.com/AuroBreeze/Z-xinAnswerAutomatic) 项目，感谢开源
+
+## 友情链接
+
+[使用python进行对知新网站的内容获取进行自动答题](https://github.com/AuroBreeze/Z-xinAnswerAutomatic)
