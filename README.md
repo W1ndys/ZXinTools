@@ -37,6 +37,11 @@
 
 本项目为辅助完成作业的脚本，请在使用后 24 小时内删除。仅供学习和交流使用，禁止用于任何商业用途，否则后果自负，作者不承担任何责任。
 
+## 使用截图
+
+![image](https://github.com/user-attachments/assets/2e851a9e-0fea-441f-a40e-fd54a2abbcb2)
+
+
 ## 开源协议
 
 本项目采用 [MIT 开源协议](LICENSE)，请遵守开源协议
