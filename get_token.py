@@ -1,5 +1,9 @@
 import requests
 import base64
+from log_config import setup_logger
+
+# 设置日志记录器
+logger = setup_logger("get_token")
 
 
 def user_pass_base64(username, password):
@@ -21,19 +25,19 @@ def get_token(username, password):
         code = response["code"]
         msg = response["msg"]
         if code == 2000:
-            print("[+]登录成功")
+            logger.info("登录成功")
             token = response["data"]["token"]
-            print("[+]获取token成功")
-            print("--------------------------------")
+            logger.info("获取token成功")
+            logger.info("--------------------------------")
             return token
         else:
-            print("[-]登录失败")
-            print(f"错误信息: {msg}")
-            print("--------------------------------")
+            logger.error("登录失败")
+            logger.error(f"错误信息: {msg}")
+            logger.info("--------------------------------")
             return None
     except requests.exceptions.RequestException as e:
-        print(f"[-]请求失败: {e}，请检查网络连接")
+        logger.error(f"请求失败: {e}，请检查网络连接")
         return None
     except KeyError as e:
-        print(f"[-]响应中缺少预期的键: {e}，请检查账号密码是否正确")
+        logger.error(f"响应中缺少预期的键: {e}，请检查账号密码是否正确")
         return None

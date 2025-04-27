@@ -2,6 +2,7 @@ import requests
 import base64
 import json
 import os
+from log_config import setup_logger
 
 
 class ZXinClient:
@@ -11,6 +12,7 @@ class ZXinClient:
 
     def __init__(self, username=None, password=None, config_file=".env"):
         """初始化客户端，可以直接提供用户名密码或从配置文件读取"""
+        self.logger = setup_logger(self.__class__.__name__)
         if username and password:
             self.username = username
             self.password = password
@@ -28,13 +30,13 @@ class ZXinClient:
                 config = file.read().split("\n")
                 username = config[0].split("=")[1]
                 password = config[1].split("=")[1]
-                print("[+]读取账号密码成功")
-                print("[+]账号：" + username)
-                print("[+]密码：" + password)
-                print("--------------------------------")
+                self.logger.info("读取账号密码成功")
+                self.logger.info("账号：" + username)
+                self.logger.info("密码：" + password)
+                self.logger.info("--------------------------------")
                 return username, password
         except Exception as e:
-            print(f"[-]读取配置文件失败: {e}")
+            self.logger.error(f"读取配置文件失败: {e}")
             raise
 
     def _user_pass_base64(self, username, password):
@@ -56,21 +58,21 @@ class ZXinClient:
             msg = response["msg"]
 
             if code == 2000:
-                print("[+]登录成功")
+                self.logger.info("登录成功")
                 self.token = response["data"]["token"]
-                print("[+]获取token成功")
-                print("--------------------------------")
+                self.logger.info("获取token成功")
+                self.logger.info("--------------------------------")
                 return self.token
             else:
-                print("[-]登录失败")
-                print(f"错误信息: {msg}")
-                print("--------------------------------")
+                self.logger.error("登录失败")
+                self.logger.error(f"错误信息: {msg}")
+                self.logger.info("--------------------------------")
                 return None
         except requests.exceptions.RequestException as e:
-            print(f"[-]请求失败: {e}，请检查网络连接")
+            self.logger.error(f"请求失败: {e}，请检查网络连接")
             return None
         except KeyError as e:
-            print(f"[-]响应中缺少预期的键: {e}，请检查账号密码是否正确")
+            self.logger.error(f"响应中缺少预期的键: {e}，请检查账号密码是否正确")
             return None
 
     def get_headers(self):
@@ -101,7 +103,7 @@ class ZXinClient:
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
-            print(f"[-]API请求失败: {e}")
+            self.logger.error(f"API请求失败: {e}")
             return None
 
     def get_user_info(self):
@@ -109,7 +111,7 @@ class ZXinClient:
         response = self.api_request("/auth/user")
 
         if response and response.get("code") == 2000:
-            print("[+]用户信息获取成功")
+            self.logger.info("用户信息获取成功")
             data = response.get("data", {})
 
             # 提取用户基本信息
@@ -150,13 +152,13 @@ class ZXinClient:
 
             # 打印用户信息
             for key, value in user_info.items():
-                print(f"[+]{key}: {value}")
+                self.logger.info(f"{key}: {value}")
 
-            print("--------------------------------")
+            self.logger.info("--------------------------------")
             return user_info
         else:
-            print("[-]获取用户信息失败")
-            print("--------------------------------")
+            self.logger.error("获取用户信息失败")
+            self.logger.info("--------------------------------")
             return None
 
     def save_json(self, data, filename):
@@ -164,7 +166,7 @@ class ZXinClient:
         filepath = os.path.join(self.output_dir, filename)
         with open(filepath, "w", encoding="utf-8") as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
-        print(f"[+]保存数据成功，数据已保存到 {filepath} 文件中")
+        self.logger.info(f"保存数据成功，数据已保存到 {filepath} 文件中")
         return filepath
 
     def save_text(self, text, filename):
@@ -172,5 +174,5 @@ class ZXinClient:
         filepath = os.path.join(self.output_dir, filename)
         with open(filepath, "w", encoding="utf-8") as file:
             file.write(text)
-        print(f"[+]保存文本成功，已保存到 {filepath} 文件中")
+        self.logger.info(f"保存文本成功，已保存到 {filepath} 文件中")
         return filepath

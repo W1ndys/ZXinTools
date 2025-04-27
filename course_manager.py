@@ -10,14 +10,14 @@ class CourseManager(ZXinClient):
 
     def fetch_course_data(self):
         """获取已加入的课程数据"""
-        print("[+]开始获取课程数据")
+        self.logger.info("开始获取课程数据")
         course_data = self.api_request("/stu/course/getJoinedCourse2")
 
         if course_data and course_data.get("msg") == "成功":
-            print("[+]课程数据获取成功")
+            self.logger.info("课程数据获取成功")
             return course_data
         else:
-            print("[-]课程数据获取失败")
+            self.logger.error("课程数据获取失败")
             return None
 
     def process_course_data(self, course_data=None):
@@ -26,14 +26,14 @@ class CourseManager(ZXinClient):
             course_data = self.fetch_course_data()
 
         if not course_data:
-            print("[-]没有可处理的课程数据")
+            self.logger.error("没有可处理的课程数据")
             return False
 
         # 保存原始JSON数据
         self.save_json(course_data, "course_data.json")
 
         if course_data["msg"] == "成功":
-            print("[+]即将开始解析课程数据")
+            self.logger.info("即将开始解析课程数据")
 
             # 格式化课程数据
             formatted_data = self._format_course_data(course_data)
@@ -41,12 +41,12 @@ class CourseManager(ZXinClient):
             # 保存格式化的文本数据
             self.save_text(formatted_data, "course_data.txt")
 
-            print("[+]课程数据解析完成")
-            print("[+]课程数据程序运行结束")
-            print("--------------------------------")
+            self.logger.info("课程数据解析完成")
+            self.logger.info("课程数据程序运行结束")
+            self.logger.info("--------------------------------")
             return True
         else:
-            print("[-]课程数据获取失败")
+            self.logger.error("课程数据获取失败")
             return False
 
     def _format_course_data(self, course_data):

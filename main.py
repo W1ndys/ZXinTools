@@ -1,13 +1,18 @@
 from zxin_client import ZXinClient
 from course_manager import CourseManager
 from score_manager import ScoreManager
+from log_config import setup_logger
+
+# 创建日志记录器
+logger = setup_logger("main")
 
 
 def print_banner():
     """打印程序banner"""
-    print("智新教学平台工具集")
-    print("https://github.com/W1ndys")
-    print("--------------------------------")
+    logger.info("知新2.0脚本工具 by W1ndys")
+    logger.info("https://github.com/W1ndys")
+    logger.info("知新2.0 https://stu.z-xin.net/")
+    logger.info("--------------------------------")
 
 
 def main():
@@ -17,18 +22,18 @@ def main():
     # 创建客户端并获取token
     client = ZXinClient()
     if not client.login():
-        print("[-]程序退出: 获取token失败")
+        logger.error("程序退出: 获取token失败")
         return
 
     while True:
-        print("\n请选择要执行的操作:")
-        print("1. 获取用户信息")
-        print("2. 获取课程数据")
-        print("3. 获取成绩信息")
-        print("0. 退出程序")
+        logger.info("\n请选择要执行的操作:")
+        logger.info("1. 获取用户信息")
+        logger.info("2. 获取课程数据")
+        logger.info("3. 获取成绩信息")
+        logger.info("0. 退出程序")
 
         choice = input("请输入选项 [0-3]: ")
-        print("--------------------------------")
+        logger.info("--------------------------------")
 
         if choice == "1":
             client.get_user_info()
@@ -41,10 +46,10 @@ def main():
             score_mgr.token = client.token  # 共享token避免重复登录
             score_mgr.process_score_data()
         elif choice == "0":
-            print("[+]程序已退出")
+            logger.info("程序已退出")
             break
         else:
-            print("[-]无效选项，请重新输入")
+            logger.warning("无效选项，请重新输入")
 
 
 if __name__ == "__main__":

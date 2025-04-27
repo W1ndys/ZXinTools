@@ -10,14 +10,14 @@ class ScoreManager(ZXinClient):
 
     def fetch_score_data(self):
         """获取成绩数据（使用与课程数据相同的API）"""
-        print("[+]开始获取成绩数据")
+        self.logger.info("开始获取成绩数据")
         score_data = self.api_request("/stu/course/getJoinedCourse2")
 
         if score_data and score_data.get("msg") == "成功":
-            print("[+]成绩数据获取成功")
+            self.logger.info("成绩数据获取成功")
             return score_data
         else:
-            print("[-]成绩数据获取失败")
+            self.logger.error("成绩数据获取失败")
             return None
 
     def process_score_data(self, score_data=None):
@@ -26,14 +26,14 @@ class ScoreManager(ZXinClient):
             score_data = self.fetch_score_data()
 
         if not score_data:
-            print("[-]没有可处理的成绩数据")
+            self.logger.error("没有可处理的成绩数据")
             return False
 
         # 保存原始JSON数据
         self.save_json(score_data, "score_data.json")
 
         if score_data["msg"] == "成功":
-            print("[+]即将开始解析成绩数据")
+            self.logger.info("即将开始解析成绩数据")
 
             # 格式化成绩数据
             formatted_data = self._format_score_data(score_data)
@@ -41,14 +41,14 @@ class ScoreManager(ZXinClient):
             # 保存格式化的文本数据
             self.save_text(formatted_data, "score_info.txt")
 
-            print("[+]成绩数据解析完成")
-            print("[+]成绩数据程序运行结束")
-            print("--------------------------------")
-            print("Power by W1ndys")
-            print("https://github.com/W1ndys")
+            self.logger.info("成绩数据解析完成")
+            self.logger.info("成绩数据程序运行结束")
+            self.logger.info("--------------------------------")
+            self.logger.info("Power by W1ndys")
+            self.logger.info("https://github.com/W1ndys")
             return True
         else:
-            print("[-]成绩数据获取失败")
+            self.logger.error("成绩数据获取失败")
             return False
 
     def _format_score_data(self, score_data):
