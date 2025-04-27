@@ -31,8 +31,6 @@ class ZXinClient:
                 username = config[0].split("=")[1]
                 password = config[1].split("=")[1]
                 self.logger.info("读取账号密码成功")
-                self.logger.info("账号：" + username)
-                self.logger.info("密码：" + password)
                 self.logger.info("--------------------------------")
                 return username, password
         except Exception as e:
