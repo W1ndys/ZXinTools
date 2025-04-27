@@ -25,6 +25,10 @@ def feishu(title: str, content: str) -> dict:
     FEISHU_BOT_URL = os.environ.get("FEISHU_BOT_URL")
     FEISHU_BOT_SECRET = os.environ.get("FEISHU_BOT_SECRET")
 
+    if not FEISHU_BOT_URL or not FEISHU_BOT_SECRET:
+        logging.error("飞书webhook未配置")
+        return {"error": "飞书webhook未配置"}
+
     feishu_webhook = FEISHU_BOT_URL
     feishu_secret = FEISHU_BOT_SECRET
     timestamp = str(int(time.time()))
