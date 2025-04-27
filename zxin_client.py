@@ -25,9 +25,9 @@ class ZXinClient:
         """从配置文件中读取账号和密码"""
         try:
             with open(config_file, "r", encoding="utf-8") as file:
-                config = json.load(file)
-                username = config["username"]
-                password = config["password"]
+                config = file.read().split("\n")
+                username = config[0].split("=")[1]
+                password = config[1].split("=")[1]
                 print("[+]读取账号密码成功")
                 print("[+]账号：" + username)
                 print("[+]密码：" + password)
