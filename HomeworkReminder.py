@@ -1,6 +1,7 @@
 from zxin_client import ZXinClient
 from course_manager import CourseManager
 import datetime
+from feishu import feishu
 
 
 class HomeworkReminder(ZXinClient):
@@ -51,12 +52,12 @@ class HomeworkReminder(ZXinClient):
 
         return "".join(parts)
 
-    def scan_homework(self, days_threshold=3):
+    def scan_homework(self, days_threshold=5):
         """
         扫描快截止的作业，并发送提醒
 
         Args:
-            days_threshold: 提前多少天提醒，默认3天
+            days_threshold: 提前多少天提醒，默认5天
         """
         self.logger.info("开始扫描作业")
         course_data = self.fetch_course_data()
@@ -122,6 +123,13 @@ class HomeworkReminder(ZXinClient):
                         f"发现即将截止作业：《{homework['title']}》, "
                         f"课程：{course['course']['name']}, "
                         f"剩余时间：{remaining_time_str}"
+                    )
+                    # 发送飞书消息
+                    feishu(
+                        "发现即将截止作业",
+                        f"作业：《{homework['title']}》, "
+                        f"课程：{course['course']['name']}, "
+                        f"剩余时间：{remaining_time_str}",
                     )
                 else:
                     # 显示所有作业的状态
