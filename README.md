@@ -1,19 +1,78 @@
-# ZXinTools
+# ZXinTools - 智新教学平台工具集
 
-- 曲阜师范大学某平台作业截止提醒（未开发）
-- 曲阜师范大学某平台作业查看成绩（已开发）
+这是一个用于获取智新教学平台数据的工具集，采用面向对象的方式进行了重构，使代码更加模块化、系统化和易于维护。
 
-## 联系
+## 特性
 
-有疑问请联系QQ，点击链接加我为QQ好友：https://qm.qq.com/q/unUcwC0eyG
+- 获取用户个人信息
+- 获取课程数据和作业详情
+- 获取成绩信息
+- 交互式菜单操作
+- 数据导出为 JSON 和 TXT 格式
+
+## 项目结构
+
+- `zxin_client.py` - 基础客户端类，处理认证和基本 API 请求
+- `course_manager.py` - 课程管理类，处理课程数据相关功能
+- `score_manager.py` - 成绩管理类，处理成绩数据相关功能
+- `main.py` - 主程序，提供交互式菜单
 
 ## 使用方法
 
-### 查看成绩
+1. 创建`.env`文件，包含以下内容：
 
-1. 修改 `config.json` 中的账号密码
-2. 运行 `get_score.py`
-3. 结果会保存到 `socre_info/course_summary.txt` 文件中
+```
+username=你的账号
+password=你的密码
+```
+
+2. 运行主程序：
+
+```bash
+python main.py
+```
+
+3. 从交互式菜单中选择需要的功能：
+   - 1: 获取用户信息
+   - 2: 获取课程数据
+   - 3: 获取成绩信息
+   - 0: 退出程序
+
+## 数据输出
+
+所有输出文件将保存在`output`目录下：
+
+- `course_data.json` - 原始课程数据（JSON 格式）
+- `course_data.txt` - 格式化课程数据（文本格式）
+- `score_data.json` - 原始成绩数据（JSON 格式）
+- `score_info.txt` - 格式化成绩数据（文本格式）
+
+## 开发说明
+
+### 类层次结构
+
+- `ZXinClient` - 基础客户端类
+  - `CourseManager` - 课程管理类（继承自`ZXinClient`）
+  - `ScoreManager` - 成绩管理类（继承自`ZXinClient`）
+
+### 扩展
+
+如需添加新功能，可以：
+
+1. 创建新的管理类，继承自`ZXinClient`
+2. 在`main.py`中添加对应的菜单选项和处理逻辑
+
+## 致谢
+
+原始代码由 [W1ndys](https://github.com/W1ndys) 开发
+
+## 许可证
+
+遵循原项目许可
+
+## 联系
+
+有疑问请联系 QQ，点击链接加我为 QQ 好友：https://qm.qq.com/q/unUcwC0eyG
 
 ## 更新日志
 
@@ -36,7 +95,6 @@
 
 ![image](https://github.com/user-attachments/assets/7b503fab-9ac3-4c17-8f07-391338c04b5a)
 
-
 ## 开源协议
 
 本项目采用 [MIT 开源协议](LICENSE)，请遵守开源协议
@@ -45,4 +103,4 @@
 
 ## 友情链接
 
-[使用python进行对知新网站的内容获取进行自动答题](https://github.com/AuroBreeze/Z-xinAnswerAutomatic)
+[使用 python 进行对知新网站的内容获取进行自动答题](https://github.com/AuroBreeze/Z-xinAnswerAutomatic)
