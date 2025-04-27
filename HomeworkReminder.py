@@ -20,26 +20,22 @@ class HomeworkReminder(ZXinClient):
         # 加载环境变量
         load_dotenv(config_file)
 
+        # 从环境变量读取用户名和密码
+        env_username = os.getenv("ZXIN_USERNAME")
+        env_password = os.getenv("ZXIN_PASSWORD")
+
+        # 优先使用参数传入的用户名密码，其次使用环境变量
         if username and password:
-            self.username = username
-            self.password = password
-        else:
-            # 从环境变量读取用户名和密码
-            self.username = os.getenv("ZXIN_USERNAME")
-            self.password = os.getenv("ZXIN_PASSWORD")
+            pass  # 使用传入的参数
+        elif env_username and env_password:
+            username = env_username
+            password = env_password
 
-            if not self.username or not self.password:
-                # 尝试使用父类方法读取
-                self.username, self.password = self._read_config(config_file)
-
-        self.logger = setup_logger(self.__class__.__name__)
-        self.token = None
-        self.output_dir = "output"
-        # 确保输出目录存在
-        os.makedirs(self.output_dir, exist_ok=True)
+        # 调用父类初始化方法，确保先初始化logger
+        super().__init__(username, password, config_file)
 
         # 初始化课程管理器
-        self.course_manager = CourseManager(self.username, self.password, config_file)
+        self.course_manager = CourseManager(username, password, config_file)
 
     def get_homework_data(self):
         """获取作业数据"""
