@@ -21,7 +21,7 @@ def feishu(title: str, content: str) -> dict:
     Returns:
         dict: 接口返回结果
     """
-    # 环境变量
+    # 读取环境变量
     FEISHU_BOT_URL = os.environ.get("FEISHU_BOT_URL")
     FEISHU_BOT_SECRET = os.environ.get("FEISHU_BOT_SECRET")
 
