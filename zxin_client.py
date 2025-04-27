@@ -6,7 +6,7 @@ from log_config import setup_logger
 
 
 class ZXinClient:
-    """智新教学平台客户端基类，处理认证和基本API请求"""
+    """知新2.0客户端基类，处理认证和基本API请求"""
 
     BASE_URL = "https://v2.api.z-xin.net"
 

@@ -2,9 +2,9 @@ from zxin_client import ZXinClient
 
 
 class CourseManager(ZXinClient):
-    """智新教学平台课程管理类，处理课程数据相关功能"""
+    """知新2.0课程管理类，处理课程数据相关功能"""
 
-    def __init__(self, username=None, password=None, config_file="config.json"):
+    def __init__(self, username=None, password=None, config_file=".env"):
         """初始化课程管理器"""
         super().__init__(username, password, config_file)
 
