@@ -8,7 +8,7 @@ logs_dir = "logs"
 os.makedirs(logs_dir, exist_ok=True)
 
 # 获取当前日期作为日志文件名的一部分
-current_date = datetime.now().strftime("%Y-%m-%d")
+current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_file = os.path.join(logs_dir, f"zxin_tools_{current_date}.log")
 
 # 日志颜色配置
