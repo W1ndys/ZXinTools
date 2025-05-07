@@ -83,6 +83,8 @@ python HomeworkReminder.py
 ## 使用截图
 
 ![image](https://github.com/user-attachments/assets/7b503fab-9ac3-4c17-8f07-391338c04b5a)
+![208299516003a341b9fd33366ba74803](https://github.com/user-attachments/assets/b63768d8-1cbc-4637-9fbe-977495ca3a7b)
+![f6b2f896da1dd23a3c78e31d590a2990](https://github.com/user-attachments/assets/565f2f32-f73a-4cf1-aa8d-a4493df04709)
 
 ## 开源协议
 
