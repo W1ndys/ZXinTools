@@ -25,6 +25,8 @@
 ```
 username=你的账号
 password=你的密码
+FEISHU_BOT_URL=飞书机器人 webhook 地址
+FEISHU_BOT_SECRET=飞书机器人 secret
 ```
 
 2. 运行主程序：
