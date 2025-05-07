@@ -15,6 +15,53 @@ class HomeworkReminder(ZXinClient):
         super().__init__()
         # 初始化课程管理器
         self.course_manager = CourseManager(self)
+        # 加载已知的作业ID
+        self.known_homework_ids = self._load_known_homework_ids()
+
+    def _generate_homework_id(self, homework_item, course_name):
+        """
+        为作业生成唯一ID。
+        优先使用作业数据中的 'id' 字段，如果不存在，则创建一个合成ID。
+        """
+        if "id" in homework_item and homework_item["id"]:
+            return str(homework_item["id"])
+        else:
+            # 如果没有直接的ID，则根据其他信息创建合成ID
+            # 注意：合成ID的稳定性取决于这些字段的不变性
+            title = homework_item.get("title", "untitled")
+            endtime = homework_item.get("endtime", "no_endtime")
+            self.logger.warning(
+                f"作业《{title}》(课程：{course_name})缺少 'id' 字段，将使用合成ID。"
+            )
+            return f"{course_name}_{title}_{endtime}"
+
+    def _load_known_homework_ids(self):
+        """从文件中加载已知的作业ID"""
+        self.logger.info("开始加载已知作业ID")
+        try:
+            # 假设 ZXinClient 基类有 load_json 方法
+            data = self.load_json("known_homework_ids.json")
+            if data and "ids" in data:
+                self.logger.info(f"成功加载 {len(data['ids'])} 个已知作业ID")
+                return set(data["ids"])
+            self.logger.info("未找到已知的作业ID文件或内容为空，将创建新的ID列表")
+        except FileNotFoundError:
+            self.logger.info("known_homework_ids.json 文件未找到，将创建新的ID列表")
+        except Exception as e:
+            self.logger.error(f"加载已知作业ID失败: {e}")
+        return set()
+
+    def _save_known_homework_ids(self):
+        """将当前已知的作业ID保存到文件"""
+        self.logger.info(f"开始保存 {len(self.known_homework_ids)} 个作业ID")
+        try:
+            # 假设 ZXinClient 基类有 save_json 方法
+            self.save_json(
+                {"ids": list(self.known_homework_ids)}, "known_homework_ids.json"
+            )
+            self.logger.info("作业ID保存成功")
+        except Exception as e:
+            self.logger.error(f"保存作业ID失败: {e}")
 
     def get_homework_data(self):
         """获取作业数据"""
@@ -76,6 +123,7 @@ class HomeworkReminder(ZXinClient):
         now = datetime.datetime.now(datetime.timezone.utc)
         upcoming_homework = []
         all_homework = []
+        current_homework_ids = set()  # 用于存储本次扫描到的所有作业ID
 
         # 转换天数阈值为秒数
         seconds_threshold = days_threshold * 86400
@@ -84,6 +132,26 @@ class HomeworkReminder(ZXinClient):
             self.logger.info(f"开始扫描课程：{course['course']['name']}")
 
             for homework in course["homework"]:
+                # 为作业生成唯一ID
+                homework_id = self._generate_homework_id(
+                    homework, course["course"]["name"]
+                )
+                current_homework_ids.add(homework_id)
+
+                # 检测是否为新作业
+                if homework_id not in self.known_homework_ids:
+                    self.logger.info(
+                        f"发现新作业：《{homework['title']}》, "
+                        f"课程：{course['course']['name']}"
+                    )
+                    feishu(
+                        "发现新作业提醒",
+                        f"作业：《{homework['title']}》\n"
+                        f"课程：{course['course']['name']}\n"
+                        f"教师：{course['teacher']['user']['nickname']}\n"
+                        f"截止时间：{homework['endtime']}",
+                    )
+
                 # 解析截止时间
                 end_time_str = homework["endtime"]
                 end_time = datetime.datetime.fromisoformat(
@@ -156,6 +224,10 @@ class HomeworkReminder(ZXinClient):
 
         # 保存所有作业数据
         self.save_json({"all_homework": all_homework}, "all_homework.json")
+
+        # 更新并保存已知的作业ID
+        self.known_homework_ids = current_homework_ids
+        self._save_known_homework_ids()
 
         # 保存即将截止的作业数据
         if upcoming_homework:

@@ -168,6 +168,24 @@ class ZXinClient:
         self.logger.info(f"保存数据成功，数据已保存到 {filepath} 文件中")
         return filepath
 
+    def load_json(self, filename):
+        """从JSON文件加载数据"""
+        filepath = os.path.join(self.output_dir, filename)
+        try:
+            with open(filepath, "r", encoding="utf-8") as file:
+                data = json.load(file)
+            self.logger.info(f"从 {filepath} 加载数据成功")
+            return data
+        except FileNotFoundError:
+            self.logger.info(f"文件 {filepath} 未找到")
+            return None
+        except json.JSONDecodeError:
+            self.logger.error(f"文件 {filepath} 内容不是有效的JSON格式")
+            return None
+        except Exception as e:
+            self.logger.error(f"从 {filepath} 加载数据失败: {e}")
+            return None
+
     def save_text(self, text, filename):
         """保存文本到文件"""
         filepath = os.path.join(self.output_dir, filename)
