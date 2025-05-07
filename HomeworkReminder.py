@@ -156,9 +156,9 @@ class HomeworkReminder(ZXinClient):
                     )
                     feishu(
                         "发现新作业提醒",
-                        f"作业：《{homework['title']}》\\n"
-                        f"课程：{course['course']['name']}\\n"
-                        f"教师：{course['teacher']['user']['nickname']}\\n"
+                        f"作业：《{homework['title']}》\n"
+                        f"课程：{course['course']['name']}\n"
+                        f"教师：{course['teacher']['user']['nickname']}\n"
                         f"截止时间：{end_time_beijing.strftime('%Y-%m-%d %H:%M:%S')} (北京时间)",
                     )
 
