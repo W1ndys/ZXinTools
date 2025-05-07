@@ -119,8 +119,10 @@ class HomeworkReminder(ZXinClient):
             self.logger.error("没有可处理的课程数据")
             return
 
-        # 使用无时区的now
-        now = datetime.datetime.now(datetime.timezone.utc)
+        # 定义北京时区
+        beijing_tz = datetime.timezone(datetime.timedelta(hours=8))
+        # 获取北京时区的当前时间
+        now = datetime.datetime.now(beijing_tz)
         upcoming_homework = []
         all_homework = []
         current_homework_ids = set()  # 用于存储本次扫描到的所有作业ID
@@ -132,11 +134,19 @@ class HomeworkReminder(ZXinClient):
             self.logger.info(f"开始扫描课程：{course['course']['name']}")
 
             for homework in course["homework"]:
-                # 为作业生成唯一ID
+                # 为作业生成唯一ID (使用原始 unparsed endtime)
                 homework_id = self._generate_homework_id(
                     homework, course["course"]["name"]
                 )
                 current_homework_ids.add(homework_id)
+
+                # 解析截止时间 (来自API，通常是UTC)
+                end_time_str_utc = homework["endtime"]
+                parsed_end_time_utc = datetime.datetime.fromisoformat(
+                    end_time_str_utc.replace("Z", "+00:00")
+                )
+                # 转换为北京时间
+                end_time_beijing = parsed_end_time_utc.astimezone(beijing_tz)
 
                 # 检测是否为新作业
                 if homework_id not in self.known_homework_ids:
@@ -146,20 +156,14 @@ class HomeworkReminder(ZXinClient):
                     )
                     feishu(
                         "发现新作业提醒",
-                        f"作业：《{homework['title']}》\n"
-                        f"课程：{course['course']['name']}\n"
-                        f"教师：{course['teacher']['user']['nickname']}\n"
-                        f"截止时间：{homework['endtime']}",
+                        f"作业：《{homework['title']}》\\n"
+                        f"课程：{course['course']['name']}\\n"
+                        f"教师：{course['teacher']['user']['nickname']}\\n"
+                        f"截止时间：{end_time_beijing.strftime('%Y-%m-%d %H:%M:%S')} (北京时间)",
                     )
 
-                # 解析截止时间
-                end_time_str = homework["endtime"]
-                end_time = datetime.datetime.fromisoformat(
-                    end_time_str.replace("Z", "+00:00")
-                )
-
-                # 计算时间差
-                time_delta = end_time - now
+                # 计算时间差 (基于北京时间)
+                time_delta = end_time_beijing - now
                 days_remaining = time_delta.days
                 seconds_remaining = time_delta.total_seconds()
 
@@ -177,7 +181,8 @@ class HomeworkReminder(ZXinClient):
                     "teacher": course["teacher"]["user"]["nickname"],
                     "title": homework["title"],
                     "category": homework["category"],
-                    "end_time": end_time_str,
+                    "end_time_utc": end_time_str_utc,  # 保留原始UTC时间字符串
+                    "end_time_beijing": end_time_beijing.isoformat(),  # 存储北京时间ISO格式字符串
                     "days_remaining": days_remaining,
                     "seconds_remaining": seconds_remaining,
                     "remaining_time": remaining_time_str,
@@ -197,14 +202,16 @@ class HomeworkReminder(ZXinClient):
                     self.logger.warning(
                         f"发现即将截止作业：《{homework['title']}》, "
                         f"课程：{course['course']['name']}, "
-                        f"剩余时间：{remaining_time_str}"
+                        f"剩余时间：{remaining_time_str}, "
+                        f"截止时间：{end_time_beijing.strftime('%Y-%m-%d %H:%M:%S')} (北京时间)"
                     )
                     # 发送飞书消息
                     feishu(
                         "发现即将截止作业",
                         f"作业：《{homework['title']}》, "
                         f"课程：{course['course']['name']}, "
-                        f"剩余时间：{remaining_time_str}",
+                        f"剩余时间：{remaining_time_str}, "
+                        f"截止时间：{end_time_beijing.strftime('%Y-%m-%d %H:%M:%S')} (北京时间)",
                     )
                 else:
                     # 显示所有作业的状态
