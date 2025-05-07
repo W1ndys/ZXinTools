@@ -6,6 +6,9 @@ import requests
 import json
 import os
 import logging
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def feishu(title: str, content: str) -> dict:
