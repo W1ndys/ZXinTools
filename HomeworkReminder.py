@@ -2,9 +2,6 @@ from zxin_client import ZXinClient
 from course_manager import CourseManager
 import datetime
 from feishu import feishu
-import os
-from dotenv import load_dotenv
-from log_config import setup_logger
 
 
 class HomeworkReminder(ZXinClient):
