@@ -29,9 +29,6 @@ class ScoreManager(ZXinClient):
             self.logger.error("没有可处理的成绩数据")
             return False
 
-        # 保存原始JSON数据
-        self.save_json(score_data, "score_data.json")
-
         if score_data["msg"] == "成功":
             self.logger.info("即将开始解析成绩数据")
 
