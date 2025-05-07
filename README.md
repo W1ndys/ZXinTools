@@ -9,7 +9,7 @@
 - 获取成绩信息
 - 交互式菜单操作
 - 数据导出为 JSON 和 TXT 格式
-- [作业提醒功能](https://github.com/W1ndys/ZXinTools/blob/main/HomeworkReminder.py)
+- [新作业、作业截止提醒功能](https://github.com/W1ndys/ZXinTools/blob/main/HomeworkReminder.py)
 
 ## 项目结构
 
