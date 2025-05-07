@@ -8,34 +8,13 @@ from log_config import setup_logger
 
 
 class HomeworkReminder(ZXinClient):
-    def __init__(self, username=None, password=None, config_file=".env"):
+    def __init__(self):
         """
-        初始化作业提醒器，可以直接提供用户名密码或从配置文件读取
-
-        Args:
-            username: 用户名
-            password: 密码
-            config_file: 配置文件路径，默认为.env
+        初始化作业提醒器
         """
-        # 加载环境变量
-        load_dotenv(config_file)
-
-        # 从环境变量读取用户名和密码
-        env_username = os.getenv("ZXIN_USERNAME")
-        env_password = os.getenv("ZXIN_PASSWORD")
-
-        # 优先使用参数传入的用户名密码，其次使用环境变量
-        if username and password:
-            pass  # 使用传入的参数
-        elif env_username and env_password:
-            username = env_username
-            password = env_password
-
-        # 调用父类初始化方法，确保先初始化logger
-        super().__init__(username, password, config_file)
-
+        super().__init__()
         # 初始化课程管理器
-        self.course_manager = CourseManager(username, password, config_file)
+        self.course_manager = CourseManager(self)
 
     def get_homework_data(self):
         """获取作业数据"""

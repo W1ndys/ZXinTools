@@ -39,12 +39,10 @@ def main():
             if choice == "1":
                 client.get_user_info()
             elif choice == "2":
-                course_mgr = CourseManager(client.username, client.password)
-                course_mgr.token = client.token  # 共享token避免重复登录
+                course_mgr = CourseManager(client)
                 course_mgr.process_course_data()
             elif choice == "3":
-                score_mgr = ScoreManager(client.username, client.password)
-                score_mgr.token = client.token  # 共享token避免重复登录
+                score_mgr = ScoreManager(client)
                 score_mgr.process_score_data()
             elif choice == "0":
                 logger.info("程序已退出")

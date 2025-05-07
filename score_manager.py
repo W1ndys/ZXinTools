@@ -1,17 +1,19 @@
 from zxin_client import ZXinClient
+from log_config import setup_logger
 
 
-class ScoreManager(ZXinClient):
+class ScoreManager:
     """知新2.0成绩管理类，处理成绩数据相关功能"""
 
-    def __init__(self, username=None, password=None, config_file=".env"):
+    def __init__(self, client: ZXinClient):
         """初始化成绩管理器"""
-        super().__init__(username, password, config_file)
+        self.client = client
+        self.logger = setup_logger(self.__class__.__name__)
 
     def fetch_score_data(self):
         """获取成绩数据（使用与课程数据相同的API）"""
         self.logger.info("开始获取成绩数据")
-        score_data = self.api_request("/stu/course/getJoinedCourse2")
+        score_data = self.client.api_request("/stu/course/getJoinedCourse2")
 
         if score_data and score_data.get("msg") == "成功":
             self.logger.info("成绩数据获取成功")
@@ -36,7 +38,7 @@ class ScoreManager(ZXinClient):
             formatted_data = self._format_score_data(score_data)
 
             # 保存格式化的文本数据
-            self.save_text(formatted_data, "score_info.txt")
+            self.client.save_text(formatted_data, "score_info.txt")
 
             self.logger.info("成绩数据解析完成")
             self.logger.info("成绩数据程序运行结束")

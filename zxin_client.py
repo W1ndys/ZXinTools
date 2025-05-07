@@ -13,6 +13,7 @@ class ZXinClient:
     def __init__(self, username=None, password=None, config_file=".env"):
         """初始化客户端，可以直接提供用户名密码或从配置文件读取"""
         self.logger = setup_logger(self.__class__.__name__)
+        self.session = requests.Session()  # 初始化 session
         if username and password:
             self.username = username
             self.password = password
@@ -51,7 +52,7 @@ class ZXinClient:
                 self.username, self.password
             )
             data = {"username": base64_username, "password": base64_password}
-            response = requests.post(url, data=data).json()
+            response = self.session.post(url, data=data).json()
             code = response["code"]
             msg = response["msg"]
 
@@ -90,9 +91,9 @@ class ZXinClient:
             headers = self.get_headers()
 
             if method.upper() == "GET":
-                response = requests.get(url, headers=headers)
+                response = self.session.get(url, headers=headers)
             elif method.upper() == "POST":
-                response = requests.post(
+                response = self.session.post(
                     url, headers=headers, json=data if data else {}
                 )
             else:

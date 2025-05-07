@@ -1,17 +1,19 @@
 from zxin_client import ZXinClient
+from log_config import setup_logger
 
 
-class CourseManager(ZXinClient):
+class CourseManager:
     """知新2.0课程管理类，处理课程数据相关功能"""
 
-    def __init__(self, username=None, password=None, config_file=".env"):
+    def __init__(self, client: ZXinClient):
         """初始化课程管理器"""
-        super().__init__(username, password, config_file)
+        self.client = client
+        self.logger = setup_logger(self.__class__.__name__)
 
     def fetch_course_data(self):
         """获取已加入的课程数据"""
         self.logger.info("开始获取课程数据")
-        course_data = self.api_request("/stu/course/getJoinedCourse2")
+        course_data = self.client.api_request("/stu/course/getJoinedCourse2")
 
         if course_data and course_data.get("msg") == "成功":
             self.logger.info("课程数据获取成功")
@@ -29,17 +31,14 @@ class CourseManager(ZXinClient):
             self.logger.error("没有可处理的课程数据")
             return False
 
-        # 保存原始JSON数据
-        self.save_json(course_data, "course_data.json")
+        self.client.save_json(course_data, "course_data.json")
 
         if course_data["msg"] == "成功":
             self.logger.info("即将开始解析课程数据")
 
-            # 格式化课程数据
             formatted_data = self._format_course_data(course_data)
 
-            # 保存格式化的文本数据
-            self.save_text(formatted_data, "course_data.txt")
+            self.client.save_text(formatted_data, "course_data.txt")
 
             self.logger.info("课程数据解析完成")
             self.logger.info("课程数据程序运行结束")
