@@ -3,6 +3,9 @@ import base64
 import json
 import os
 from log_config import setup_logger
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class ZXinClient:
@@ -10,33 +13,16 @@ class ZXinClient:
 
     BASE_URL = "https://v2.api.z-xin.net"
 
-    def __init__(self, username=None, password=None, config_file=".env"):
-        """初始化客户端，可以直接提供用户名密码或从配置文件读取"""
+    def __init__(self):
+        """初始化客户端，可以从环境变量读取"""
         self.logger = setup_logger(self.__class__.__name__)
         self.session = requests.Session()  # 初始化 session
-        if username and password:
-            self.username = username
-            self.password = password
-        else:
-            self.username, self.password = self._read_config(config_file)
+        self.username = os.getenv("ZXIN_USERNAME")
+        self.password = os.getenv("ZXIN_PASSWORD")
         self.token = None
         self.output_dir = "output"
         # 确保输出目录存在
         os.makedirs(self.output_dir, exist_ok=True)
-
-    def _read_config(self, config_file):
-        """从配置文件中读取账号和密码"""
-        try:
-            with open(config_file, "r", encoding="utf-8") as file:
-                config = file.read().split("\n")
-                username = config[0].split("=")[1]
-                password = config[1].split("=")[1]
-                self.logger.info("读取账号密码成功")
-                self.logger.info("--------------------------------")
-                return username, password
-        except Exception as e:
-            self.logger.error(f"读取配置文件失败: {e}")
-            raise
 
     def _user_pass_base64(self, username, password):
         """将用户名和密码转换为base64编码"""
