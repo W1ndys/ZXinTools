@@ -40,6 +40,16 @@ console_handler.setFormatter(console_formatter)
 def setup_logger(name):
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
+
+    # 清除此记录器上所有现有的处理程序
+    # 以防止多次调用setup_logger或ZXinClient等其他代码已向此记录器添加处理程序时重复添加我们的处理程序。
+    if logger.hasHandlers():
+        logger.handlers.clear()
+
     logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
+    logger.addHandler(console_handler)  # 这是彩色的控制台处理器
+
+    # 防止消息传递给父记录器（例如根记录器）的处理程序
+    # 如果无色重复消息来自根记录器的控制台处理程序，这将阻止它们。
+    logger.propagate = False
     return logger
