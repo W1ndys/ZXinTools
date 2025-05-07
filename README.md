@@ -1,6 +1,6 @@
-# ZXinTools - 知新2.0脚本工具集
+# ZXinTools - 知新 2.0 脚本工具集
 
-这是一个用于获取知新2.0数据的工具集，采用面向对象的方式进行了重构，使代码更加模块化、系统化和易于维护。
+这是一个用于获取知新 2.0 数据的工具集，采用面向对象的方式进行了重构，使代码更加模块化、系统化和易于维护。
 
 ## 特性
 
@@ -9,6 +9,7 @@
 - 获取成绩信息
 - 交互式菜单操作
 - 数据导出为 JSON 和 TXT 格式
+- [作业提醒功能](https://github.com/W1ndys/ZXinTools/blob/main/HomeworkReminder.py)
 
 ## 项目结构
 
@@ -38,6 +39,12 @@ python main.py
    - 3: 获取成绩信息
    - 0: 退出程序
 
+### 作业提醒功能
+
+```bash
+python HomeworkReminder.py
+```
+
 ## 数据输出
 
 所有输出文件将保存在`output`目录下：
@@ -61,14 +68,6 @@ python main.py
 
 1. 创建新的管理类，继承自`ZXinClient`
 2. 在`main.py`中添加对应的菜单选项和处理逻辑
-
-## 致谢
-
-原始代码由 [W1ndys](https://github.com/W1ndys) 开发
-
-## 许可证
-
-遵循原项目许可
 
 ## 联系
 
