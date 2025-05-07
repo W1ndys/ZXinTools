@@ -63,6 +63,7 @@ python HomeworkReminder.py
 - `ZXinClient` - 基础客户端类
   - `CourseManager` - 课程管理类（继承自`ZXinClient`）
   - `ScoreManager` - 成绩管理类（继承自`ZXinClient`）
+  - `HomeworkManager` - 作业管理类（继承自`ZXinClient`）
 
 ### 扩展
 
@@ -75,22 +76,9 @@ python HomeworkReminder.py
 
 有疑问请联系 QQ，点击链接加我为 QQ 好友：https://qm.qq.com/q/unUcwC0eyG
 
-## 更新日志
-
-### 2024.11.14
-
-- feat: 使用模块化编程
-- feat: 分离 `get_token` 函数
-- feat: 添加了从 `config.json` 中读取账号密码的功能
-- feat: 添加了 `get_score.py` 文件，用于查看成绩（实际上是获取课程数据的子功能）
-
-### 2024.11.12
-
-- feat: 完成了初步的开发
-
 ## 免责声明
 
-本项目为辅助完成作业的脚本，请在使用后 24 小时内删除。仅供学习和交流使用，禁止用于任何商业用途，否则后果自负，作者不承担任何责任。
+本项目为辅助脚本，只读不写，仅可用于成绩查看作业查看，所有内容都可以通过浏览器手动获取，无越权获取数据等行为，请在下载后 24 小时内删除。仅供学习和交流使用，禁止用于任何商业用途，否则后果自负，作者不承担任何责任。
 
 ## 使用截图
 
@@ -101,7 +89,3 @@ python HomeworkReminder.py
 本项目采用 [MIT 开源协议](LICENSE)，请遵守开源协议
 
 本项目的 token 获取函数来自 [AuroBreeze](https://github.com/AuroBreeze) 的 [Z-xinAnswerAutomatic](https://github.com/AuroBreeze/Z-xinAnswerAutomatic) 项目，感谢开源
-
-## 友情链接
-
-[使用 python 进行对知新网站的内容获取进行自动答题](https://github.com/AuroBreeze/Z-xinAnswerAutomatic)
